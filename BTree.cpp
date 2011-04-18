@@ -39,5 +39,7 @@ void BTree::print()
 
 
 void BTree::remove(int value)
-{  // make call to delte int
+{  
+  BTreeNode *ptr = root->remove(value);
+// To be written by students
 } // BTree::remove()

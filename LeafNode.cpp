@@ -122,17 +122,25 @@ void LeafNode::print(Queue <BTreeNode*> &queue)
 
 
 LeafNode* LeafNode::remove(int value)
-{ 
-  int i;
-  for(i = 0; i < count; i++)
+{
+  int pos = 0;
+  while(1)
   {
-    if(values[i] == value)
+    if(values[pos] == value)
     {
-     //Delete the value
-     //check surrounding nodes
+      for(int i = pos; i < count; i++)
+      {
+        values[i] = values[i + 1];
+      }
+      count--;
+      break;
     }
+    if(values[pos] > value)
+      break;
+    pos++;
+  
   }
-   
+   // To be written by students
   return NULL;  // filler for stub
 }  // LeafNode::remove()
 
