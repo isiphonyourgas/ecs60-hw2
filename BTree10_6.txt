@@ -1,0 +1,3 @@
+This file inserts ten in order and then deletes three.
+i20 i40 i17 i29 i18 i30 i43 i16 i92 i22 d17 d18 d16 d40 d92 d43 
+

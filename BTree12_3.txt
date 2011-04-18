@@ -1,0 +1,2 @@
+This inserts 12 and deletes 3 middle values
+i1 i2 i3 i4 i5 i6 i7 i8 i9 i10 i11 i12 d7 d8 d9

@@ -1,0 +1,2 @@
+This file inserts 5 values and then deletes 1
+i20 i40 i17 i29 i18 d17
