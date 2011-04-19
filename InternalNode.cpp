@@ -174,10 +174,16 @@ void InternalNode::print(Queue <BTreeNode*> &queue)
 BTreeNode* InternalNode::remove(int value)
 {  
   int pos;
+  int transfer;
+  int count2;
   for(pos = count - 1; pos > 0 && keys[pos] > value; pos--);
   
   BTreeNode *ptr = children[pos]->remove(value);
-
+  if((pos + 1) < count)
+  {
+    keys[pos + 1] = children[pos + 1]->getMinimum();
+  }
+  keys[pos] = children[pos]->getMinimum();
   
 
 

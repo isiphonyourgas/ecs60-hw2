@@ -20,6 +20,7 @@ public:
   LeafNode* remove(int value); // NULL == no merge
   void print(Queue <BTreeNode*> &queue);
   LeafNode* split(int value, int last);
+  int checkCount();
 
 }; //LeafNode class
 

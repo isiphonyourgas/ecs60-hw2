@@ -128,6 +128,7 @@ LeafNode* LeafNode::remove(int value)
   {
     if(values[pos] == value)
     {
+
       for(int i = pos; i < count; i++)
       {
         values[i] = values[i + 1];
@@ -138,7 +139,34 @@ LeafNode* LeafNode::remove(int value)
     if(values[pos] > value)
       break;
     pos++;
+  }
   
+  if(count < (leafSize / 2))
+  {
+    int transfer;
+    BTreeNode *ptr;
+    bool check = 0;
+      //Checks left sibling
+    if(leftSibling != NULL)
+    {   
+      if(leftSibling->getCount() > (leafSize / 2))
+      {
+        transfer = leftSibling->getMaximum();
+        ptr = leftSibling->remove(transfer);
+        this->insert(transfer);
+        check = 1;
+      }
+    }  
+    
+    if((check == 0) && rightSibling != NULL)
+    {
+      if(rightSibling->getCount() > (leafSize / 2))
+      {
+        transfer = rightSibling->getMinimum();
+        ptr = rightSibling->remove(transfer);
+        this->insert(transfer);
+      }
+    }
   }
    // To be written by students
   return NULL;  // filler for stub
