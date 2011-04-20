@@ -11,6 +11,8 @@ LeafNode::LeafNode(int LSize, InternalNode *p,
   BTreeNode *left, BTreeNode *right) : BTreeNode(LSize, p, left, right)
 {
   values = new int[LSize];
+//this->setRightSibling(NULL);
+//this->setLeftSibling(NULL);
 }  // LeafNode()
 
 void LeafNode::addToLeft(int value, int last)
@@ -158,17 +160,24 @@ int count1;
       //Checks left sibling
     if(leftSibling != NULL)
     {   
+cout << "left pass \n";
       if((siblingCount = leftSibling->getCount()) > (leafSize / 2) + balancer)
       {        
+cout << "problem left 1\n";
         ptr = static_cast<LeafNode*>(leftSibling);
         transfer = ptr->borrowLeft();
         this->insert(transfer);
       } else {
+cout << "problem left 2 \n";
         ptr = static_cast<LeafNode*>(leftSibling);
-        this->setLeftSibling(ptr->getLeftSibling());//Set new Sibling
-        leftSibling->setRightSibling(this);
-        //ptr->setRightSibling(NULL);
-        //ptr->setLeftSibling(NULL);
+cout << "ptr pass \n";
+        if(ptr->getLeftSibling() != NULL)
+        {
+          this->setLeftSibling(ptr->getLeftSibling());//Set new Sibling
+          leftSibling->setRightSibling(this);
+        }
+        ptr->setRightSibling(NULL);
+        ptr->setLeftSibling(NULL);
         for(i = 0; i < count; i++)
         {
 cout << "seg1\n";
@@ -184,12 +193,12 @@ cout << "seg2\n";
         return ptr;
       }
       check = 1;
-cout << "left\n\n";
+
     }//Left Sibling  
    cout << check << endl;
     if((check == 0) && (rightSibling != NULL))
     {
-//cout << "right pass\n";
+cout << "right pass\n";
       if(rightSibling->getCount() > ((leafSize / 2) + balancer))
       {
        cout << "problem1\n"; 
@@ -197,13 +206,16 @@ cout << "left\n\n";
         transfer = ptr->borrowRight();
         this->insert(transfer);
       } else {
-//cout << "problem2\n";
+cout << "problem2\n";
 
         ptr = static_cast<LeafNode*>(rightSibling);
-        this->setRightSibling(ptr->getRightSibling());
-        rightSibling->setLeftSibling(this);
-    //    ptr->setLeftSibling(NULL);
-    //    ptr->setRightSibling(NULL);
+        if(ptr->getRightSibling() != NULL)
+        {
+          this->setRightSibling(ptr->getRightSibling());
+          rightSibling->setLeftSibling(this);
+        }
+        ptr->setLeftSibling(NULL);
+        ptr->setRightSibling(NULL);
         for(i = 0; i < ptr->getCount(); i++)
         {
           values[count] = ptr->values[i];
@@ -213,7 +225,7 @@ cout << "left\n\n";
         return ptr;
       }
       check = 1;
-cout << "right\n\n";
+//cout << "right\n\n";
     }//Right Sibling   
 //cout << "seg\n";
   if(check  == 0)
@@ -250,7 +262,7 @@ int LeafNode::borrowRight()
   int val = values[0];
   int i;
   count--;
-  for(i = 0; i < count - 1; i++)
+  for(i = 0; i < count; i++)
   {
     values[i] = values[i + 1];
   }
