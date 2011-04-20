@@ -173,19 +173,52 @@ void InternalNode::print(Queue <BTreeNode*> &queue)
 
 BTreeNode* InternalNode::remove(int value)
 {  
-  int pos;
-  int transfer;
+  int pos, i, j;
+  //int transfer;
   int count2;
+  InternalNode *sibling;
   for(pos = count - 1; pos > 0 && keys[pos] > value; pos--);
   
   BTreeNode *ptr = children[pos]->remove(value);
+
   if((pos + 1) < count)
   {
     keys[pos + 1] = children[pos + 1]->getMinimum();
   }
   keys[pos] = children[pos]->getMinimum();
+ 
+  if(leftSibling != NULL)
+  {
+cout << "int left\n";
+    count2 = leftSibling->getCount();
+    sibling = static_cast<InternalNode*>(leftSibling);
+    if(sibling->children[count2 - 1] == ptr)
+      sibling->deleteLeft();
+  }
   
 
+  if(rightSibling != NULL)
+  {
+cout << "int right\n";
+    sibling = static_cast<InternalNode*>(rightSibling);
+    if(sibling->children[0] == ptr)
+      sibling->deleteRight();
+  }
+  
+  for(i = 0; i < count - 1; i++)
+  {
+    if(children[i] == ptr)
+    {
+      delete children[i];
+      for(j = i; j < count - 1; j++)
+      {
+        children[j] = children[j + 1];
+        keys[j] = children[j]->getMinimum();
+      }
+      count--;
+      break;
+    }
+  }
 
 // to be written by students
   return NULL; // filler for stub
@@ -230,3 +263,21 @@ InternalNode* InternalNode::split(BTreeNode *last)
   return newptr;
 } // split()
 
+void InternalNode::deleteLeft()
+{
+  count--;
+  delete children[count];
+}
+
+
+void InternalNode::deleteRight()
+{
+  int i;
+  count--;
+  delete children[0];
+  for(i = 0; i < count; i++)
+  {
+    children[i] = children[i + 1];
+    this->resetMinimum(children[i]);
+  }
+}

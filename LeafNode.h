@@ -21,6 +21,8 @@ public:
   void print(Queue <BTreeNode*> &queue);
   LeafNode* split(int value, int last);
   int checkCount();
+  int borrowRight();
+  int borrowLeft();
 
 }; //LeafNode class
 

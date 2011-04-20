@@ -25,6 +25,8 @@ public:
   BTreeNode* remove(int value);
   void resetMinimum(const BTreeNode* child);
   InternalNode* split(BTreeNode *last);
+  void deleteLeft();
+  void deleteRight();
 }; // InternalNode class
 
 

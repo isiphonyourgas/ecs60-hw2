@@ -124,6 +124,7 @@ void LeafNode::print(Queue <BTreeNode*> &queue)
 LeafNode* LeafNode::remove(int value)
 {
   int pos = 0;
+  int balancer = 0;
   while(1)
   {
     if(values[pos] == value)
@@ -140,35 +141,84 @@ LeafNode* LeafNode::remove(int value)
       break;
     pos++;
   }
-  
-  if(count < (leafSize / 2))
+  if((leafSize % 2) == 1)//if odd
+  {
+    
+    balancer = 1;
+  }
+cout << count << endl << leafSize/2 + balancer << endl << endl;
+  if(count < ((leafSize / 2) + balancer))
   {
     int transfer;
-    BTreeNode *ptr;
-    bool check = 0;
+    BTreeNode *ptr2;
+    LeafNode *ptr;
+    int check = 0;
+    int siblingCount, i;
+int count1;
       //Checks left sibling
     if(leftSibling != NULL)
     {   
-      if(leftSibling->getCount() > (leafSize / 2))
-      {
-        transfer = leftSibling->getMaximum();
-        ptr = leftSibling->remove(transfer);
+      if((siblingCount = leftSibling->getCount()) > (leafSize / 2) + balancer)
+      {        
+        ptr = static_cast<LeafNode*>(leftSibling);
+        transfer = ptr->borrowLeft();
         this->insert(transfer);
-        check = 1;
+      } else {
+        ptr = static_cast<LeafNode*>(leftSibling);
+        this->setLeftSibling(ptr->getLeftSibling());//Set new Sibling
+        leftSibling->setRightSibling(this);
+        //ptr->setRightSibling(NULL);
+        //ptr->setLeftSibling(NULL);
+        for(i = 0; i < count; i++)
+        {
+cout << "seg1\n";
+          values[i + ptr->getCount()] = values[i];
+
+        }
+        for(i = ptr->getCount() - 1; i > -1; i--)
+        {
+cout << "seg2\n";
+          values[i] = ptr->values[i];
+          count++;
+        }
+        return ptr;
       }
-    }  
-    
-    if((check == 0) && rightSibling != NULL)
+      check = 1;
+cout << "left\n\n";
+    }//Left Sibling  
+   cout << check << endl;
+    if((check == 0) && (rightSibling != NULL))
     {
-      if(rightSibling->getCount() > (leafSize / 2))
+//cout << "right pass\n";
+      if(rightSibling->getCount() > ((leafSize / 2) + balancer))
       {
-        transfer = rightSibling->getMinimum();
-        ptr = rightSibling->remove(transfer);
+       cout << "problem1\n"; 
+        ptr = static_cast<LeafNode*>(rightSibling);
+        transfer = ptr->borrowRight();
         this->insert(transfer);
+      } else {
+//cout << "problem2\n";
+
+        ptr = static_cast<LeafNode*>(rightSibling);
+        this->setRightSibling(ptr->getRightSibling());
+        rightSibling->setLeftSibling(this);
+    //    ptr->setLeftSibling(NULL);
+    //    ptr->setRightSibling(NULL);
+        for(i = 0; i < ptr->getCount(); i++)
+        {
+          values[count] = ptr->values[i];
+          count++;
+        }
+
+        return ptr;
       }
-    }
-  }
-   // To be written by students
+      check = 1;
+cout << "right\n\n";
+    }//Right Sibling   
+//cout << "seg\n";
+  if(check  == 0)
+    cout<< "Merge still needed\n\n";
+  }//If not in size reqs
   return NULL;  // filler for stub
 }  // LeafNode::remove()
 
@@ -195,3 +245,22 @@ LeafNode* LeafNode::split(int value, int last)
   return ptr;
 } // LeafNode::split()
 
+int LeafNode::borrowRight()
+{
+  int val = values[0];
+  int i;
+  count--;
+  for(i = 0; i < count - 1; i++)
+  {
+    values[i] = values[i + 1];
+  }
+  return val;
+}
+
+int LeafNode::borrowLeft()
+{
+  int val;
+  val = values[count - 1];
+  count--;
+  return val;
+}
