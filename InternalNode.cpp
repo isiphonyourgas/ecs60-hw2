@@ -205,7 +205,7 @@ BTreeNode* InternalNode::remove(int value)
 
   if(children[pos] == ptr)
   {
-cout << "deleteing\n";
+//cout << "deleteing\n";
     for(i = pos; i < count - 1; i++)
     {
       children[i] = children[i + 1];
@@ -235,7 +235,7 @@ cout << "deleteing\n";
 
 //cout<< "internal " <<count << endl << endl << (internalSize/2) + balancer << endl;
 
-  if(count < ((internalSize / 2) + balancer))
+  if(count <= ((internalSize / 2) + balancer))
   {
     BTreeNode* transfer;
     InternalNode *ptr;

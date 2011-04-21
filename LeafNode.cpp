@@ -149,7 +149,7 @@ LeafNode* LeafNode::remove(int value)
     balancer = 1;
   }
 //cout << count << endl << leafSize/2 + balancer << endl << endl;
-  if(count < ((leafSize / 2) + balancer))
+  if(count <= ((leafSize / 2) + balancer))
   {
     int transfer;
     BTreeNode *ptr2;
