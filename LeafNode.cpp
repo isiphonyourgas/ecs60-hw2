@@ -126,7 +126,6 @@ void LeafNode::print(Queue <BTreeNode*> &queue)
 LeafNode* LeafNode::remove(int value)
 {
   int pos = 0;
-  int balancer = 0;
   int q;
   for(pos = 0; pos < count; pos++)
   {
@@ -145,13 +144,7 @@ LeafNode* LeafNode::remove(int value)
   }
 
 
-  if((leafSize % 2) == 1)//if odd
-  {
-    
-    balancer = 1;
-  }
-//cout << count << endl << leafSize/2 + balancer << endl << endl;
-  if(count < ((leafSize / 2) + balancer))
+  if(count < ((leafSize+1)/2))
   {
     int transfer;
     BTreeNode *ptr2;
@@ -167,7 +160,7 @@ int count1;
     if(leftSibling != NULL)
     {   
 //cout << "left pass \n";
-      if((siblingCount = leftSibling->getCount()) > (leafSize / 2) + balancer)
+      if((siblingCount = leftSibling->getCount()) > ((leafSize+1)/ 2))
       {  //borrow from left      
 //cout << "problem left 1\n";
         ptr = static_cast<LeafNode*>(leftSibling);
@@ -204,19 +197,19 @@ int count1;
    
     if((check == 0) && (rightSibling != NULL))
     {//borrow from right
-cout << "right pass\n";
-      if(rightSibling->getCount() > ((leafSize / 2) + balancer))
+
+      if(rightSibling->getCount() > ((leafSize+1)/ 2))
       {
-cout << "problem1\n"; 
-        ptr = static_cast<LeafNode*>(rightSibling);
+
+        ptr = static_cast<LeafNode*>(rightSibling);//borrow
         transfer = ptr->borrowRight();
         this->insert(transfer);
-      }  else {//merge with right
+      }  else {
 
       
-cout << "problem2\n";
 
-        ptr = static_cast<LeafNode*>(rightSibling);
+
+        ptr = static_cast<LeafNode*>(rightSibling);//merge with right
         if(ptr->getRightSibling() != NULL)
         {
           this->setRightSibling(ptr->getRightSibling());

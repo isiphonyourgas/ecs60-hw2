@@ -181,11 +181,11 @@ BTreeNode* InternalNode::remove(int value)
   
   BTreeNode *ptr = children[pos]->remove(value);
 
-  if((pos + 1) < count)
+  if((pos + 1) < count)//updates internal node key within itself
   {
     keys[pos + 1] = children[pos + 1]->getMinimum();
   }
-  keys[pos] = children[pos]->getMinimum();
+  keys[pos] = children[pos]->getMinimum();//update current key
  
   if(leftSibling != NULL)
   {
@@ -203,12 +203,12 @@ BTreeNode* InternalNode::remove(int value)
       sibling->deleteRight();
   }//If the right sibling isn't null and first child is pointer then move that child to the end of current node
 
-  if((children[pos] == ptr) && count == 1)
+  if((children[pos] == ptr) && count == 1) //returns when a single node/child
   {
 //cout << "deleteing\n";
     return this;
   }
-  for(i = 0; i < count - 1; i++)
+  for(i = 0; i < count; i++)
   {
     if(children[i] == ptr)
     {
@@ -223,15 +223,7 @@ BTreeNode* InternalNode::remove(int value)
     }
   }//look through node for merged nodes(moerged nodes are returned
   
-
-
-  int balancer = 0;
-  if((internalSize % 2) == 1)
-    balancer = 1;//balancing function
-
-//cout<< "internal " <<count << endl << endl << (internalSize/2) + balancer << endl;
-
-  if(count < ((internalSize / 2) + balancer))
+  if(count < (internalSize+1)/ 2)//checks for borrow and merge
   {
     BTreeNode* transfer;
     InternalNode *ptr;
@@ -242,7 +234,7 @@ BTreeNode* InternalNode::remove(int value)
    
     if(leftSibling != NULL)
     {
-      if((siblingCount = leftSibling->getCount()) > (internalSize / 2))
+      if((siblingCount = leftSibling->getCount()) > ((internalSize+1)/2))
       {//borrow from left sibling
         ptr = static_cast<InternalNode*>(leftSibling);
         transfer = ptr->borrowLeft();
@@ -279,7 +271,7 @@ BTreeNode* InternalNode::remove(int value)
 
       if((check == 0) && (rightSibling != NULL))
       {
-        if(rightSibling->getCount() > ((internalSize / 2)))
+        if(rightSibling->getCount() > (internalSize+1)/2)
         {//borrow from right
           ptr = static_cast<InternalNode*>(rightSibling);
           transfer = ptr->borrowRight();

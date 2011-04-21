@@ -41,5 +41,10 @@ void BTree::print()
 void BTree::remove(int value)
 {  
   BTreeNode *ptr = root->remove(value);
+  if(ptr==root)
+  {
+    delete root;
+    root = ptr;
+  }
 // To be written by students
 } // BTree::remove()
