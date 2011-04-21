@@ -220,6 +220,80 @@ cout << "int right\n";
     }
   }
 
+  int balancer;
+  if((internalSize % 2) == 1)
+    balancer = 1;
+
+  if(count < ((internalSize / 2) + balancer))
+  {
+    BTreeNode* transfer;
+    InternalNode *ptr;
+    int siblingCount, i;
+    int check = 0;
+    if(leftSibling != NULL)
+    {
+      if((siblingCount = leftSibling->getCount()) > (internalSize / 2) + balancer)
+      {
+        ptr = static_cast<InternalNode*>(leftSibling);
+        transfer = ptr->borrowLeft();
+        for(i = count - 1; i > -1; i--)
+        {
+          children[i - 1] = children[i];
+          keys[i - 1] = children[i - 1]->getMinimum();
+        }
+        count--;
+      } else {
+        ptr = static_cast<InternalNode*>(leftSibling);
+        if(ptr->getLeftSibling() != NULL)
+        {
+          this->setLeftSibling(ptr->getLeftSibling());
+          leftSibling->setRightSibling(this);
+        }
+        ptr->setRightSibling(NULL);
+        ptr->setRightSibling(NULL);
+        for(i = 0; i < count; i++)
+        {
+          children[i + ptr->getCount()] = children[i];
+          keys[i + ptr->getCount()] = children[i + ptr->getCount()]->getMinimum();
+        }
+        for(i = ptr->getCount() - 1; i > -1; i--)
+        {
+          children[i] = ptr->children[i];
+          keys[i] = children[i]->getMinimum();
+          count++;
+        }
+        return ptr;
+      }
+      check = 1;
+    }//Left Sibling
+
+      if((check == 0) && (rightSibling != NULL))
+      {
+        if(rightSibling->getCount() > ((internalSize / 2) + balancer))
+        {
+          ptr = static_cast<InternalNode*>(rightSibling);
+          transfer = ptr->borrowRight();
+          children[count] = transfer;
+          keys[count] = children[count]->getMinimum();
+          count++;
+        }
+          ptr = static_cast<InternalNode*>(rightSibling);
+          if(ptr->getRightSibling() != NULL)
+          {
+            this->setRightSibling(ptr->getRightSibling());
+            rightSibling->setLeftSibling(this);
+          }
+          ptr->setLeftSibling(NULL);
+          ptr->setRightSibling(NULL);
+          for(i = 0; i < ptr->getCount(); i++)
+          {
+            children[count] = ptr->children[i];
+            keys[count] = children[count]->getMinimum();
+            count++;
+          }
+        return ptr;
+      }
+   }
 // to be written by students
   return NULL; // filler for stub
 } // InternalNode::remove(int value)
@@ -280,4 +354,25 @@ void InternalNode::deleteRight()
     children[i] = children[i + 1];
     this->resetMinimum(children[i]);
   }
+}
+
+BTreeNode* InternalNode::borrowRight()
+{
+  BTreeNode *val = children[0];
+  int i;
+  count--;
+  for(i = 0; i < count; i++)
+  {
+    children[i] = children[i + 1];
+    keys[i] = children[i]->getMinimum();
+  }
+  return val;
+}
+
+BTreeNode* InternalNode::borrowLeft()
+{
+  BTreeNode *val;
+  val = children[count - 1];
+  count--;
+  return val;
 }

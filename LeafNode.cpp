@@ -148,7 +148,7 @@ LeafNode* LeafNode::remove(int value)
     
     balancer = 1;
   }
-cout << count << endl << leafSize/2 + balancer << endl << endl;
+//cout << count << endl << leafSize/2 + balancer << endl << endl;
   if(count < ((leafSize / 2) + balancer))
   {
     int transfer;
@@ -160,17 +160,17 @@ int count1;
       //Checks left sibling
     if(leftSibling != NULL)
     {   
-cout << "left pass \n";
+//cout << "left pass \n";
       if((siblingCount = leftSibling->getCount()) > (leafSize / 2) + balancer)
       {        
-cout << "problem left 1\n";
+//cout << "problem left 1\n";
         ptr = static_cast<LeafNode*>(leftSibling);
         transfer = ptr->borrowLeft();
         this->insert(transfer);
       } else {
-cout << "problem left 2 \n";
+//cout << "problem left 2 \n";
         ptr = static_cast<LeafNode*>(leftSibling);
-cout << "ptr pass \n";
+//cout << "ptr pass \n";
         if(ptr->getLeftSibling() != NULL)
         {
           this->setLeftSibling(ptr->getLeftSibling());//Set new Sibling
@@ -180,13 +180,13 @@ cout << "ptr pass \n";
         ptr->setLeftSibling(NULL);
         for(i = 0; i < count; i++)
         {
-cout << "seg1\n";
+//cout << "seg1\n";
           values[i + ptr->getCount()] = values[i];
 
         }
         for(i = ptr->getCount() - 1; i > -1; i--)
         {
-cout << "seg2\n";
+//cout << "seg2\n";
           values[i] = ptr->values[i];
           count++;
         }
@@ -195,18 +195,18 @@ cout << "seg2\n";
       check = 1;
 
     }//Left Sibling  
-   cout << check << endl;
+   
     if((check == 0) && (rightSibling != NULL))
     {
-cout << "right pass\n";
+//cout << "right pass\n";
       if(rightSibling->getCount() > ((leafSize / 2) + balancer))
       {
-       cout << "problem1\n"; 
+//cout << "problem1\n"; 
         ptr = static_cast<LeafNode*>(rightSibling);
         transfer = ptr->borrowRight();
         this->insert(transfer);
       } else {
-cout << "problem2\n";
+//cout << "problem2\n";
 
         ptr = static_cast<LeafNode*>(rightSibling);
         if(ptr->getRightSibling() != NULL)
@@ -228,8 +228,6 @@ cout << "problem2\n";
 //cout << "right\n\n";
     }//Right Sibling   
 //cout << "seg\n";
-  if(check  == 0)
-    cout<< "Merge still needed\n\n";
   }//If not in size reqs
   return NULL;  // filler for stub
 }  // LeafNode::remove()

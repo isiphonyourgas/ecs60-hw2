@@ -27,6 +27,8 @@ public:
   InternalNode* split(BTreeNode *last);
   void deleteLeft();
   void deleteRight();
+  BTreeNode* borrowLeft();
+  BTreeNode* borrowRight();
 }; // InternalNode class
 
 
