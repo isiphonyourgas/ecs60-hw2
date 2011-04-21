@@ -189,27 +189,35 @@ BTreeNode* InternalNode::remove(int value)
  
   if(leftSibling != NULL)
   {
-cout << "int left\n";
     count2 = leftSibling->getCount();
     sibling = static_cast<InternalNode*>(leftSibling);
     if(sibling->children[count2 - 1] == ptr)
       sibling->deleteLeft();
-  }
-  
+  } 
+
 
   if(rightSibling != NULL)
   {
-cout << "int right\n";
     sibling = static_cast<InternalNode*>(rightSibling);
     if(sibling->children[0] == ptr)
       sibling->deleteRight();
   }
-  
+
+  if(children[pos] == ptr)
+  {
+cout << "deleteing\n";
+    for(i = pos; i < count - 1; i++)
+    {
+      children[i] = children[i + 1];
+      keys[i] = children[i]->getMinimum();
+    }
+    count--;
+  }
   for(i = 0; i < count - 1; i++)
   {
     if(children[i] == ptr)
     {
-      delete children[i];
+    //  delete children[i];
       for(j = i; j < count - 1; j++)
       {
         children[j] = children[j + 1];
@@ -220,9 +228,12 @@ cout << "int right\n";
     }
   }
 
-  int balancer;
+
+  int balancer = 0;
   if((internalSize % 2) == 1)
     balancer = 1;
+
+//cout<< "internal " <<count << endl << endl << (internalSize/2) + balancer << endl;
 
   if(count < ((internalSize / 2) + balancer))
   {
@@ -230,6 +241,9 @@ cout << "int right\n";
     InternalNode *ptr;
     int siblingCount, i;
     int check = 0;
+    if((count == 0) && (parent->getCount() == 1))
+      return this;
+   
     if(leftSibling != NULL)
     {
       if((siblingCount = leftSibling->getCount()) > (internalSize / 2) + balancer)
@@ -276,13 +290,14 @@ cout << "int right\n";
           children[count] = transfer;
           keys[count] = children[count]->getMinimum();
           count++;
-        }
+        } else {
           ptr = static_cast<InternalNode*>(rightSibling);
           if(ptr->getRightSibling() != NULL)
           {
             this->setRightSibling(ptr->getRightSibling());
             rightSibling->setLeftSibling(this);
           }
+
           ptr->setLeftSibling(NULL);
           ptr->setRightSibling(NULL);
           for(i = 0; i < ptr->getCount(); i++)
@@ -290,10 +305,11 @@ cout << "int right\n";
             children[count] = ptr->children[i];
             keys[count] = children[count]->getMinimum();
             count++;
-          }
+          }//for
         return ptr;
-      }
-   }
+       }//else
+     }//right sibling
+  }
 // to be written by students
   return NULL; // filler for stub
 } // InternalNode::remove(int value)

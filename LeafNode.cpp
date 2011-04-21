@@ -158,6 +158,10 @@ LeafNode* LeafNode::remove(int value)
     int siblingCount, i;
 int count1;
       //Checks left sibling
+
+  if((count == 0) && (parent->getCount() == 1))
+    return this;
+
     if(leftSibling != NULL)
     {   
 //cout << "left pass \n";
@@ -229,6 +233,7 @@ int count1;
     }//Right Sibling   
 //cout << "seg\n";
   }//If not in size reqs
+//cout << "no action\n";
   return NULL;  // filler for stub
 }  // LeafNode::remove()
 
