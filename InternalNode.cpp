@@ -193,7 +193,7 @@ BTreeNode* InternalNode::remove(int value)
     sibling = static_cast<InternalNode*>(leftSibling);
     if(sibling->children[count2 - 1] == ptr)
       sibling->deleteLeft();
-  } 
+  } //If the left sibling isn't null and the left sibling's rightmost child is the pointer returned, move that child to the beginning of current node
 
 
   if(rightSibling != NULL)
@@ -201,17 +201,12 @@ BTreeNode* InternalNode::remove(int value)
     sibling = static_cast<InternalNode*>(rightSibling);
     if(sibling->children[0] == ptr)
       sibling->deleteRight();
-  }
+  }//If the right sibling isn't null and first child is pointer then move that child to the end of current node
 
-  if(children[pos] == ptr)
+  if((children[pos] == ptr) && count == 1)
   {
 //cout << "deleteing\n";
-    for(i = pos; i < count - 1; i++)
-    {
-      children[i] = children[i + 1];
-      keys[i] = children[i]->getMinimum();
-    }
-    count--;
+    return this;
   }
   for(i = 0; i < count - 1; i++)
   {
@@ -226,28 +221,29 @@ BTreeNode* InternalNode::remove(int value)
       count--;
       break;
     }
-  }
+  }//look through node for merged nodes(moerged nodes are returned
+  
 
 
   int balancer = 0;
   if((internalSize % 2) == 1)
-    balancer = 1;
+    balancer = 1;//balancing function
 
 //cout<< "internal " <<count << endl << endl << (internalSize/2) + balancer << endl;
 
-  if(count <= ((internalSize / 2) + balancer))
+  if(count < ((internalSize / 2) + balancer))
   {
     BTreeNode* transfer;
     InternalNode *ptr;
     int siblingCount, i;
     int check = 0;
-    if((count == 0) && (parent->getCount() == 1))
-      return this;
+  //  if((count == 0))
+  //    return this;
    
     if(leftSibling != NULL)
     {
-      if((siblingCount = leftSibling->getCount()) > (internalSize / 2) + balancer)
-      {
+      if((siblingCount = leftSibling->getCount()) > (internalSize / 2))
+      {//borrow from left sibling
         ptr = static_cast<InternalNode*>(leftSibling);
         transfer = ptr->borrowLeft();
         for(i = count - 1; i > -1; i--)
@@ -256,7 +252,7 @@ BTreeNode* InternalNode::remove(int value)
           keys[i - 1] = children[i - 1]->getMinimum();
         }
         count--;
-      } else {
+      } else {//merge with left
         ptr = static_cast<InternalNode*>(leftSibling);
         if(ptr->getLeftSibling() != NULL)
         {
@@ -276,21 +272,21 @@ BTreeNode* InternalNode::remove(int value)
           keys[i] = children[i]->getMinimum();
           count++;
         }
-        return ptr;
+        return ptr;//returns the merged
       }
       check = 1;
     }//Left Sibling
 
       if((check == 0) && (rightSibling != NULL))
       {
-        if(rightSibling->getCount() > ((internalSize / 2) + balancer))
-        {
+        if(rightSibling->getCount() > ((internalSize / 2)))
+        {//borrow from right
           ptr = static_cast<InternalNode*>(rightSibling);
           transfer = ptr->borrowRight();
           children[count] = transfer;
           keys[count] = children[count]->getMinimum();
           count++;
-        } else {
+        } else {//merge with right
           ptr = static_cast<InternalNode*>(rightSibling);
           if(ptr->getRightSibling() != NULL)
           {
@@ -306,10 +302,12 @@ BTreeNode* InternalNode::remove(int value)
             keys[count] = children[count]->getMinimum();
             count++;
           }//for
-        return ptr;
+        return ptr;//returns the merged
        }//else
      }//right sibling
+    
   }
+  //delete ptr;
 // to be written by students
   return NULL; // filler for stub
 } // InternalNode::remove(int value)
