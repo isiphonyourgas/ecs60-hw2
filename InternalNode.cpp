@@ -181,6 +181,8 @@ BTreeNode* InternalNode::remove(int value)
   
   BTreeNode *ptr = children[pos]->remove(value);
 
+
+
   if((pos + 1) < count)//updates internal node key within itself
   {
     keys[pos + 1] = children[pos + 1]->getMinimum();
@@ -299,6 +301,9 @@ BTreeNode* InternalNode::remove(int value)
      }//right sibling
     
   }
+
+    if((count == 1))
+          return this;
   //delete ptr;
 // to be written by students
   return NULL; // filler for stub
@@ -358,7 +363,7 @@ void InternalNode::deleteRight()
   for(i = 0; i < count; i++)
   {
     children[i] = children[i + 1];
-    this->resetMinimum(children[i]);
+    keys[i] = children[i]->getMinimum();
   }
 }
 
@@ -381,4 +386,9 @@ BTreeNode* InternalNode::borrowLeft()
   val = children[count - 1];
   count--;
   return val;
+}
+
+BTreeNode* InternalNode::getFirstChild()
+{
+    return children[0];
 }

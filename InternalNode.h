@@ -29,6 +29,7 @@ public:
   void deleteRight();
   BTreeNode* borrowLeft();
   BTreeNode* borrowRight();
+  BTreeNode* getFirstChild();
 }; // InternalNode class
 
 

@@ -43,6 +43,9 @@ void BTree::remove(int value)
   BTreeNode *ptr = root->remove(value);
   if(ptr==root)
   {
+    InternalNode *ptr2;
+    ptr2 = static_cast<InternalNode*> (ptr);
+    ptr = ptr2->getFirstChild();
     delete root;
     root = ptr;
   }

@@ -203,7 +203,8 @@ int count1;
 
         ptr = static_cast<LeafNode*>(rightSibling);//borrow
         transfer = ptr->borrowRight();
-        this->insert(transfer);
+        values[count] = transfer;
+        count++;
       }  else {
 
       
