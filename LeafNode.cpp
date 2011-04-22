@@ -126,7 +126,7 @@ void LeafNode::print(Queue <BTreeNode*> &queue)
 LeafNode* LeafNode::remove(int value)
 {
   int pos = 0;
-  int q;
+ // int q;
   for(pos = 0; pos < count; pos++)
   {
     if(values[pos] == value)
@@ -147,11 +147,11 @@ LeafNode* LeafNode::remove(int value)
   if(count < ((leafSize+1)/2))
   {
     int transfer;
-    BTreeNode *ptr2;
+   // BTreeNode *ptr2;
     LeafNode *ptr;
     int check = 0;
     int siblingCount, i;
-int count1;
+//int count1;
       //Checks left sibling
 
  // if(count == 0)
@@ -174,6 +174,8 @@ int count1;
         {
           this->setLeftSibling(ptr->getLeftSibling());//Set new Sibling
           leftSibling->setRightSibling(this);
+        } else {
+          this->setLeftSibling(NULL);
         }
         ptr->setRightSibling(NULL);
         ptr->setLeftSibling(NULL);

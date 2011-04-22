@@ -216,6 +216,8 @@ BTreeNode* InternalNode::remove(int value) {
                 if (ptr->getLeftSibling() != NULL) {
                     this->setLeftSibling(ptr->getLeftSibling());
                     leftSibling->setRightSibling(this);
+                } else {
+                    this->setLeftSibling(NULL);
                 }
                 ptr->setRightSibling(NULL);
                 ptr->setRightSibling(NULL);
