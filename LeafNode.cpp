@@ -215,6 +215,8 @@ int count1;
         {
           this->setRightSibling(ptr->getRightSibling());
           rightSibling->setLeftSibling(this);
+        } else {
+            this->setRightSibling(NULL);
         }
         ptr->setLeftSibling(NULL);
         ptr->setRightSibling(NULL);
@@ -232,8 +234,11 @@ int count1;
 //cout << "seg\n";
   }//If not in size reqs
 //cout << "no action\n";
+if((count == 0) && (parent == NULL))
+  return NULL;
 if(count == 0)
   return this;
+
   return NULL;  // filler for stub
 }  // LeafNode::remove()
 
